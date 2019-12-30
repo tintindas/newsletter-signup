@@ -1,9 +1,10 @@
 //jshint esversion:6
-
+const dotenv = require('dotenv');
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
 
+const result = dotenv.config();
 const app = express();
 
 app.use(express.static("public"));
@@ -38,15 +39,17 @@ app.post("/", function(req, res) {
     url: "https://us4.api.mailchimp.com/3.0/lists/d35f3dd601",
     method: 'post',
     headers: {
-      "Authorization": "tintin_das afec758c7682adae62a18fd567fa7723-us4"
+      "Authorization": "tintin_das " + process.env.mailchimpapi
     },
     body: jsonData
   };
 
   request(options, function(error, response, body) {
+    console.log(response.statusCode);
     if (error) {
       res.sendFile(__dirname + "/failure.html");
     } else if(response.statusCode === 200){
+
       res.sendFile(__dirname + "/success.html");
     } else{
       res.sendFile(__dirname + "/failure.html");
